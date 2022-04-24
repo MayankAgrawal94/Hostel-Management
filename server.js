@@ -11,6 +11,7 @@ const readline = require('readline').createInterface({
 
 const init = require('./app/controller/init');
 const registration = require('./app/controller/registration');
+const output = require('./app/controller/output');
 
 let total_strength = 0
 let classes = [ 'A', 'B' ], food_prefrences = [ 'N', 'NV' ], overflow_data = []
@@ -20,7 +21,7 @@ let local_storage = { }
 
 hostelManagement( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
 
-async function hostelManagement( ques, data = []){
+function hostelManagement( ques ){
   
   readline.question(ques, input => {
     try{
@@ -47,29 +48,34 @@ async function hostelManagement( ques, data = []){
 
       //Student registration entry.
       } else if (total_strength > 0 && input.includes('reg')){
-        const resp = await registration.create(input, local_storage, overflow_data)
-        if(resp){
-          hostelManagement('> ',data)
-        }else{
-          hostelManagement('Invalid entry!\n> ', data)
-        }
+        registration.create(input, local_storage, overflow_data, function(REG_CB){
+          if(REG_CB){
+            hostelManagement('> ')
+          }else{
+            hostelManagement('Invalid entry!\n> ')
+          }
+        })
 
       //Student registration when finishes.
       }else if(input == 'fin') {
 
-        console.log( '\n Final output:\n', data )
-        readline.close()
+        output.print( local_storage, overflow_data, function(OUT_CB){
+          if(OUT_CB){
+            readline.close()
+          }
+        })
 
       //When user making invalid entries.
       }else{
 
-        hostelManagement('Invalid entry!\n> ', data)
+        hostelManagement('Invalid entry!\n> ')
 
       }
-
+    
+    //hostelManagement() function error handling.
     }catch(err){
       console.error(err, err.message);
-      hostelManagement(`Please try again!\n\n> `, data)
+      hostelManagement(`Please try again!\n\n> `)
     }
     
   })
