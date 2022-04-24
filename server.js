@@ -14,7 +14,7 @@ const registration = require('./app/controller/registration');
 const output = require('./app/controller/output');
 
 let total_strength = 0
-let classes = [ 'A', 'B' ], food_prefrences = [ 'N', 'NV' ], overflow_data = []
+let classes = [ 'A', 'B' ], food_prefrences = [ 'V', 'NV' ], overflow_data = []
 let combination = classes.length * food_prefrences.length
 let local_storage = { }
 
@@ -39,8 +39,7 @@ function hostelManagement( ques ){
         total_strength = parseInt(input.split(" ")[1])
         if( total_strength % combination == 0){
           init.create(total_strength/combination, classes, food_prefrences, local_storage);
-          console.log(local_storage)
-          hostelManagement("\n'Let's begin the student registration -\n> ")
+          hostelManagement("\nLet's begin the student registration -\n> ")
         }else{
           total_strength = 0
           hostelManagement(`Please try again!\n\n> `)
@@ -67,6 +66,7 @@ function hostelManagement( ques ){
 
       //When user making invalid entries.
       }else{
+
 
         hostelManagement('Invalid entry!\n> ')
 

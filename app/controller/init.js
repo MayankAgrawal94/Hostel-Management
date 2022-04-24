@@ -7,7 +7,7 @@ module.exports = {
         key_combination.map(key=>{
             local_storage[key] = {
                 value:[],
-                total: value
+                capping: value
             }
         })
     }
