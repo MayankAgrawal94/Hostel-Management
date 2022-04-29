@@ -15,67 +15,68 @@ let combination = classes.length * food_prefrences.length
 let local_storage = { }
 
 //Here we call the main function to initiate the module functionality.
-main( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
+_takingUserInput( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
 
 
-function main( ques ){
-  
+function _takingUserInput( ques ){
   readline.question(ques, input => {
-    try{
-
-      //If any point of time user wants to emergency exit the portal.
-      if(input.toLowerCase() == 'exit'){
-        console.log( '\n Thank you for using "Hostel Management" application.\n\n Please Vist us again!\n')
-        readline.close()
-        return;
-      }
-
-      //User first input for student registration capacity.
-      if( total_strength == 0 && input.includes('init')){
-
-        total_strength = parseInt(input.split(" ")[1])
-        if( total_strength % combination == 0){
-          _init(total_strength/combination, classes, food_prefrences, local_storage);
-
-          //Recursion call
-          main("\nLet's begin the student registration -\n> ")
-        }else{
-          total_strength = 0
-          main(`Please try again!\n\n> `)
-        }
-
-      //Student registration entry.
-      } else if (total_strength > 0 && input.includes('reg')){
-        _registration(input, local_storage, overflow_data, function(REG_CB){
-          if(REG_CB){
-            main('> ')
-          }else{
-            main('Invalid entry!\n> ')
-          }
-        })
-
-      //Student registration when finishes.
-      }else if(input == 'fin') {
-
-        _output( local_storage, overflow_data, function(OUT_CB){
-          if(OUT_CB){
-            readline.close()
-          }
-        })
-
-      //When user making invalid entries.
-      }else{
-        main('Invalid entry!\n> ')
-      }
-    
-    //error handling.
-    }catch(err){
-      console.error(err, err.message);
-      main(`Please try again!\n\n> `)
-    }
-    
+    main( input, readline )
   })
+}
+
+function main(input, readline = null){
+  try{
+
+    //If any point of time user wants to emergency exit the portal.
+    if(input.toLowerCase() == 'exit'){
+      console.log( '\n Thank you for using "Hostel Management" application.\n\n Please Vist us again!\n')
+      readline ? readline.close() : ''
+      return;
+    }
+
+    //User first input for student registration capacity.
+    if( total_strength == 0 && input.includes('init')){
+
+      total_strength = parseInt(input.split(" ")[1])
+      if( total_strength % combination == 0){
+        _init(total_strength/combination, classes, food_prefrences, local_storage);
+
+        //Recursion call
+        _takingUserInput("\nLet's begin the student registration -\n> ")
+      }else{
+        total_strength = 0
+        _takingUserInput(`Please try again!\n\n> `)
+      }
+
+    //Student registration entry.
+    } else if (total_strength > 0 && input.includes('reg')){
+      _registration(input, local_storage, overflow_data, function(REG_CB){
+        if(REG_CB){
+          _takingUserInput('> ')
+        }else{
+          _takingUserInput('Invalid entry!\n> ')
+        }
+      })
+
+    //Student registration when finishes.
+    }else if(input == 'fin') {
+
+      _output( local_storage, overflow_data, function(OUT_CB){
+        if(OUT_CB){
+          readline ? readline.close() : ''
+        }
+      })
+
+    //When user making invalid entries.
+    }else{
+      _takingUserInput('Invalid entry!\n> ')
+    }
   
+  //error handling.
+  }catch(err){
+    console.error(err, err.message);
+    _takingUserInput(`Please try again!\n\n> `)
+  }
 }
 
 function _init(value, classes, food_prefrences, local_storage){
