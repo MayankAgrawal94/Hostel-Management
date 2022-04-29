@@ -9,19 +9,16 @@ const readline = require('readline').createInterface({
   output: process.stdout
 })
 
-const init = require('./app/controller/init');
-const registration = require('./app/controller/registration');
-const output = require('./app/controller/output');
-
 let total_strength = 0
 let classes = [ 'A', 'B' ], food_prefrences = [ 'V', 'NV' ], overflow_data = []
 let combination = classes.length * food_prefrences.length
 let local_storage = { }
 
+//Here we call the main function to initiate the module functionality.
+main( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
 
-hostelManagement( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
 
-function hostelManagement( ques ){
+function main( ques ){
   
   readline.question(ques, input => {
     try{
@@ -38,7 +35,7 @@ function hostelManagement( ques ){
 
         total_strength = parseInt(input.split(" ")[1])
         if( total_strength % combination == 0){
-          init.create(total_strength/combination, classes, food_prefrences, local_storage);
+          _init(total_strength/combination, classes, food_prefrences, local_storage);
           hostelManagement("\nLet's begin the student registration -\n> ")
         }else{
           total_strength = 0
@@ -47,7 +44,7 @@ function hostelManagement( ques ){
 
       //Student registration entry.
       } else if (total_strength > 0 && input.includes('reg')){
-        registration.create(input, local_storage, overflow_data, function(REG_CB){
+        _registration(input, local_storage, overflow_data, function(REG_CB){
           if(REG_CB){
             hostelManagement('> ')
           }else{
@@ -58,7 +55,7 @@ function hostelManagement( ques ){
       //Student registration when finishes.
       }else if(input == 'fin') {
 
-        output.print( local_storage, overflow_data, function(OUT_CB){
+        _output( local_storage, overflow_data, function(OUT_CB){
           if(OUT_CB){
             readline.close()
           }
@@ -80,4 +77,46 @@ function hostelManagement( ques ){
     
   })
   
+}
+
+function _init(value, classes, food_prefrences, local_storage){
+  const key_combination = classes.reduce( (a, v) =>
+      [...a, ...food_prefrences.map(x=>v+x)],
+  []);
+
+  key_combination.map(key=>{
+      local_storage[key] = {
+          value:[],
+          capping: value
+      }
+  })
+}
+
+function _registration(input, localStorage, overflowData, REG_CB){
+  const reg_input = input.split(" ")
+  const key = reg_input[2]+reg_input[3]
+  const id = parseInt(reg_input[1])
+  if(reg_input.length == 4 && localStorage[key]){
+      if(localStorage[key]['capping']){
+          const index = localStorage[key]['value'].findIndex(x=> x == id )
+          if(index == -1){
+              localStorage[key]['value'].push(id)
+              localStorage[key]['capping']--;
+          }
+      }else{
+          overflowData.push(id)
+      }
+      REG_CB(true)
+  } else {
+      REG_CB(false)
+  }
+}
+
+function _output(localStorage, overflowData, OUT_CB){
+  console.log( '\nFinal output:-\n' )
+  for (const property in localStorage) {
+      console.log(`${property}: `,localStorage[property]['value']);
+  }
+  console.log('NA: ', overflowData);
+  OUT_CB(true)
 }
