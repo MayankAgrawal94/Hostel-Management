@@ -1,7 +1,7 @@
 /** 
  * Author: Mayank Agrawal
  * Contact: mnk.agrawal94@gmail.com
- * Date: 24tf April 2022
+ * Date: 24th April 2022
  * */
 
 const readline = require('readline').createInterface({
