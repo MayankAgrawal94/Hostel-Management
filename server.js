@@ -36,19 +36,21 @@ function main( ques ){
         total_strength = parseInt(input.split(" ")[1])
         if( total_strength % combination == 0){
           _init(total_strength/combination, classes, food_prefrences, local_storage);
-          hostelManagement("\nLet's begin the student registration -\n> ")
+
+          //Recursion call
+          main("\nLet's begin the student registration -\n> ")
         }else{
           total_strength = 0
-          hostelManagement(`Please try again!\n\n> `)
+          main(`Please try again!\n\n> `)
         }
 
       //Student registration entry.
       } else if (total_strength > 0 && input.includes('reg')){
         _registration(input, local_storage, overflow_data, function(REG_CB){
           if(REG_CB){
-            hostelManagement('> ')
+            main('> ')
           }else{
-            hostelManagement('Invalid entry!\n> ')
+            main('Invalid entry!\n> ')
           }
         })
 
@@ -63,16 +65,13 @@ function main( ques ){
 
       //When user making invalid entries.
       }else{
-
-
-        hostelManagement('Invalid entry!\n> ')
-
+        main('Invalid entry!\n> ')
       }
     
-    //hostelManagement() function error handling.
+    //error handling.
     }catch(err){
       console.error(err, err.message);
-      hostelManagement(`Please try again!\n\n> `)
+      main(`Please try again!\n\n> `)
     }
     
   })
