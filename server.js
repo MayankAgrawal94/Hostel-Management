@@ -5,6 +5,7 @@
  * */
 
 const readline = require('readline')
+let rl;
 
 let total_strength = 0
 let classes = [ 'A', 'B' ], food_prefrences = [ 'V', 'NV' ], overflow_data = []
@@ -12,6 +13,10 @@ let combination = classes.length * food_prefrences.length
 let local_storage = { }
 let enableJest = process.env.enableJest || null
 
+if(!process.env.enableJest){
+  rl = readline.createInterface(
+    process.stdin, process.stdout);
+}
 
 //Here we call the main function to initiate the module functionality.
 _takingUserInput( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
@@ -23,10 +28,7 @@ function _takingUserInput( ques ){
     return;
   }
 
-  var rl = readline.createInterface(
-    process.stdin, process.stdout);
-
-  readline.question(ques, input => {
+  rl.question(ques, input => {
     main( input, readline )
   })
 }
@@ -37,7 +39,7 @@ function main(input, readline = null){
     //If any point of time user wants to emergency exit the portal.
     if(input.toLowerCase() == 'exit'){
       console.log( '\n Thank you for using "Hostel Management" application.\n\n Please Vist us again!\n')
-      readline ? readline.close() : ''
+      readline ? rl.close() : ''
       return;
     }
 
@@ -71,9 +73,9 @@ function main(input, readline = null){
       if(enableJest){
         return;
       }
-      output( local_storage, overflow_data, function(OUT_CB){
+      _output( local_storage, overflow_data, function(OUT_CB){
         if(OUT_CB){
-          readline ? readline.close() : ''
+          readline ? rl.close() : ''
         }
       })
 
