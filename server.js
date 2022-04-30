@@ -4,21 +4,28 @@
  * Date: 24th April 2022
  * */
 
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
+const readline = require('readline')
 
 let total_strength = 0
 let classes = [ 'A', 'B' ], food_prefrences = [ 'V', 'NV' ], overflow_data = []
 let combination = classes.length * food_prefrences.length
 let local_storage = { }
+let enableJest = process.env.enableJest || null
+
 
 //Here we call the main function to initiate the module functionality.
 _takingUserInput( '\n"Implement SortingHat: A school hostel assignment Program."\n\nPlease enter total strength of all the boarding houses.\n\n> ' );
 
+// _takingUserInput('');
 
 function _takingUserInput( ques ){
+  if(enableJest){
+    return;
+  }
+
+  var rl = readline.createInterface(
+    process.stdin, process.stdout);
+
   readline.question(ques, input => {
     main( input, readline )
   })
@@ -60,8 +67,11 @@ function main(input, readline = null){
 
     //Student registration when finishes.
     }else if(input == 'fin') {
-
-      _output( local_storage, overflow_data, function(OUT_CB){
+      
+      if(enableJest){
+        return;
+      }
+      output( local_storage, overflow_data, function(OUT_CB){
         if(OUT_CB){
           readline ? readline.close() : ''
         }
@@ -120,3 +130,23 @@ function _output(localStorage, overflowData, OUT_CB){
   console.log('NA: ', overflowData);
   OUT_CB(true)
 }
+
+
+function testing(arr, TEST_CB){
+
+  enableJest = true, total_strength = 0, local_storage = {};
+
+  for(var i = 0; i < arr.length; i++){
+    main(arr[i]);
+    if(i == arr.length - 1){
+      const resp = {}
+      for (const property in local_storage) {
+        resp[property] = local_storage[property]['value']
+      }
+      resp['NA'] = overflow_data
+      TEST_CB(resp) ;
+    }
+  }
+}
+
+module.exports = testing;

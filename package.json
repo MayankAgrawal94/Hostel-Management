@@ -4,7 +4,7 @@
   "description": "\"\"",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
   },
   "repository": {
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/MayankAgrawal94/Hostel-Management/issues"
   },
-  "homepage": "https://github.com/MayankAgrawal94/Hostel-Management#readme"
+  "homepage": "https://github.com/MayankAgrawal94/Hostel-Management#readme",
+  "devDependencies": {
+    "jest": "^25.0.0"
+  }
 }
